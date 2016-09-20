@@ -70,7 +70,17 @@ function Sortable($attrs, $element, $scope) {
       });
     }
 
-    var bounds = element[0].getBoundingClientRect();
+    var el = element[0];
+    var bounds = {
+      left: el.offsetLeft,
+      top: el.offsetTop,
+    }
+    var offsetParent = el.offsetParent; // find true positioned parent, as offsetParent may be an unpositioned table
+    while (offsetParent && window.getComputedStyle(offsetParent).position === 'static') {
+      bounds.left += offsetParent.offsetLeft;
+      bounds.top += offsetParent.offsetTop;
+      offsetParent = offsetParent.offsetParent;
+    }
     var computedStyle = element.data('sortable.computedStyle');
 
     element.addClass('dragging').css({
